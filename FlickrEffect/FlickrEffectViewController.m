@@ -28,8 +28,6 @@
     [self.myScrolView addSubview:self.myImageView];
     
     self.pinkCircle = [[UIView alloc] initWithFrame:CGRectMake(110, 50, 100, 100)];
-    [self.pinkCircle addObserver:self forKeyPath:@"positionOnView" options:NSKeyValueObservingOptionNew context:nil];
-
 
     
     self.underCircle = [[UIView alloc] initWithFrame:CGRectMake(110, 50, 100, 100)];
@@ -198,7 +196,7 @@
 -(void)downloadImage{
     
     
-    NSURL *url = [NSURL URLWithString:@"http://m.abril.com/face.jpeg"];
+    NSURL *url = [NSURL URLWithString:@"http://www.uni-regensburg.de/Fakultaeten/phil_Fak_II/Psychologie/Psy_II/beautycheck/english/durchschnittsgesichter/m(01-32)_gr.jpg"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         if (!error) {
