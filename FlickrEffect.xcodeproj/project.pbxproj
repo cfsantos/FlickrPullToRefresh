@@ -203,6 +203,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Claudio;
 				TargetAttributes = {
+					DCA7124A19900ED3006993C4 = {
+						DevelopmentTeam = 89EHPP4954;
+					};
 					DCA7126B19900ED6006993C4 = {
 						TestTargetID = DCA7124A19900ED3006993C4;
 					};
@@ -381,10 +384,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FlickrEffect/FlickrEffect-Prefix.pch";
 				INFOPLIST_FILE = "FlickrEffect/FlickrEffect-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "68DD0CEB-A0FF-4A66-9796-4D076FEDD0F2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -394,10 +400,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FlickrEffect/FlickrEffect-Prefix.pch";
 				INFOPLIST_FILE = "FlickrEffect/FlickrEffect-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "68DD0CEB-A0FF-4A66-9796-4D076FEDD0F2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -461,6 +469,7 @@
 				DCA7127F19900ED6006993C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DCA7128019900ED6006993C4 /* Build configuration list for PBXNativeTarget "FlickrEffectTests" */ = {
 			isa = XCConfigurationList;
@@ -469,6 +478,7 @@
 				DCA7128219900ED6006993C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
