@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FlickrEffectViewController : UIViewController
+@interface FlickrEffectViewController : UIViewController<UIScrollViewDelegate>
+
+#define REFRESH_HEADER_HEIGHT 52.0f
+
+@property(nonatomic, weak)IBOutlet UIScrollView *myScrolView;
+@property(nonatomic, strong)UIImageView *myImageView;
+@property(nonatomic, strong)UIView *underCircle;
+
+@property(nonatomic)BOOL isDragging;
+@property(nonatomic)BOOL isLoading;
+@property(nonatomic)BOOL isAnimating;
 
 @end

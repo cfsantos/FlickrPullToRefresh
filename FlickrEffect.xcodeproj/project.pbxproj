@@ -21,6 +21,7 @@
 		DCA7127019900ED6006993C4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA7125219900ED4006993C4 /* UIKit.framework */; };
 		DCA7127819900ED6006993C4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCA7127619900ED6006993C4 /* InfoPlist.strings */; };
 		DCA7127A19900ED6006993C4 /* FlickrEffectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA7127919900ED6006993C4 /* FlickrEffectTests.m */; };
+		DCA71284199010A3006993C4 /* garden.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DCA71283199010A3006993C4 /* garden.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		DCA7127519900ED6006993C4 /* FlickrEffectTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FlickrEffectTests-Info.plist"; sourceTree = "<group>"; };
 		DCA7127719900ED6006993C4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DCA7127919900ED6006993C4 /* FlickrEffectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlickrEffectTests.m; sourceTree = "<group>"; };
+		DCA71283199010A3006993C4 /* garden.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = garden.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		DCA7125419900ED4006993C4 /* FlickrEffect */ = {
 			isa = PBXGroup;
 			children = (
+				DCA71283199010A3006993C4 /* garden.jpg */,
 				DCA7125D19900ED4006993C4 /* FlickrEffectAppDelegate.h */,
 				DCA7125E19900ED4006993C4 /* FlickrEffectAppDelegate.m */,
 				DCA7126019900ED4006993C4 /* Main.storyboard */,
@@ -231,6 +234,7 @@
 			files = (
 				DCA7126719900ED5006993C4 /* Images.xcassets in Resources */,
 				DCA7125919900ED4006993C4 /* InfoPlist.strings in Resources */,
+				DCA71284199010A3006993C4 /* garden.jpg in Resources */,
 				DCA7126219900ED4006993C4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
