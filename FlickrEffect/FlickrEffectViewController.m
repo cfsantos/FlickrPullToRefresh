@@ -28,10 +28,11 @@
     [self.myScrolView addSubview:self.myImageView];
     
     self.pinkCircle = [[UIView alloc] initWithFrame:CGRectMake(110, 50, 100, 100)];
+    [self.pinkCircle addObserver:self forKeyPath:@"positionOnView" options:NSKeyValueObservingOptionNew context:nil];
+
 
     
     self.underCircle = [[UIView alloc] initWithFrame:CGRectMake(110, 50, 100, 100)];
-    //self.underCircle = [[UIView alloc] init];
     CAShapeLayer *shape = [CAShapeLayer layer];
     UIBezierPath *path;
     
@@ -64,8 +65,6 @@
     CGFloat y = -(scrollView.contentOffset.y);
     
     if (scrollView.contentOffset.y < 1){
-        
-        //NSLog(@"y = %f", y);
         CGAffineTransform scale = CGAffineTransformMakeScale(newScale, newScale);
 
         self.myImageView.transform = scale;
@@ -88,19 +87,11 @@
 
     [self.underCircle addSubview:self.faceImageView];
     self.isAnimating = TRUE;
+    
     self.pinkCircle.backgroundColor = [UIColor purpleColor];
+
     
-    /*CABasicAnimation *rotation;
-    rotation = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
-    rotation.fromValue = [NSValue valueWithCGPoint:CGPointMake(160, 100)];
-    rotation.toValue = [NSValue valueWithCGPoint:CGPointMake(260, 100)];
-    rotation.duration = 1.1; // Speed
-    rotation.repeatCount = HUGE_VALF; // Repeat forever. Can be a finite number.
-    [self.underCircle.layer addAnimation:rotation forKey:@"Spin"];*/
-    
-    self.pinkCircle.layer.zPosition = -1;
-    
-    [UIView animateWithDuration:1.0f animations:^{
+    [UIView animateWithDuration:0.5f animations:^{
         
         self.pinkCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
         self.pinkCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
@@ -115,29 +106,26 @@
         self.pinkCircle.transform = transform;
         self.underCircle.transform = transform;
     }completion:^(BOOL finished){
-        [UIView animateWithDuration:1.0f  delay:0 options:( UIViewAnimationOptionRepeat |UIViewAnimationOptionAutoreverse ) animations:^{
-            self.pinkCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
-            self.pinkCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
-            self.underCircle.layer.zPosition = -2;
-            self.pinkCircle.layer.zPosition = 2;
+        self.underCircle.layer.zPosition = 0;
+        self.pinkCircle.layer.zPosition = 0;
+        [UIView animateWithDuration:0.5f  delay:0 options:( UIViewAnimationOptionRepeat |UIViewAnimationOptionAutoreverse ) animations:^{
             
+            self.pinkCircle.layer.zPosition = 1;
+            self.pinkCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
+            
+            self.pinkCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
+            self.pinkCircle.layer.zPosition = -1;
+            
+            NSLog(@"pinkCircle.position: %@", NSStringFromCGPoint([self.pinkCircle.layer.presentationLayer position]));
+        
             self.underCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
             self.underCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
-            self.underCircle.layer.zPosition = 2;
-            self.pinkCircle.layer.zPosition = -2;
+            
             
             
         } completion:^(BOOL finished){
             self.isAnimating = FALSE;
             self.underCircle.layer.zPosition = -999;
-            /*NSTimeInterval duration = 1 - abs(self.pinkCircle.layer.frame.origin.x/160);
-            
-            [UIView animateWithDuration:duration animations:^{
-                self.underCircle.layer.position = CGPointMake(160, 100);
-                self.pinkCircle.layer.position = CGPointMake(160, 100);
-            }];*/
-            
-            //self.underCircle.layer.position = CGPointMake(160, 100);
         }];
     }];
     
@@ -152,26 +140,18 @@
     UIBezierPath *path;
     if (offset < REFRESH_HEADER_HEIGHT) {
         CGFloat endAngle = (2 * M_PI)*offset / REFRESH_HEADER_HEIGHT;
-        //NSLog(@"endAngle = %f", endAngle);
         
-        path = [UIBezierPath bezierPath]; //empty path
+        path = [UIBezierPath bezierPath];
         [path moveToPoint:CGPointMake(50, 50)];
         CGPoint next;
         next.x = 50 + 50 * cos(0);
         next.y = 50 + 50 * sin(0);
-        [path addLineToPoint:next]; //go one end of arc
-        [path addArcWithCenter:CGPointMake(50, 50) radius:50 startAngle:0 endAngle:endAngle clockwise:YES]; //add the arc
+        [path addLineToPoint:next];
+        [path addArcWithCenter:CGPointMake(50, 50) radius:50 startAngle:0 endAngle:endAngle clockwise:YES];
         [path addLineToPoint:CGPointMake(50, 50)];
         [path fill];
         
-        /*path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(50, 50)
-                                              radius:50
-                                          startAngle:0
-                                            endAngle:endAngle
-                                           clockwise:YES];*/
         NSLog(@"path = %@", path);
-        
-    //}if (offset == REFRESH_HEADER_HEIGHT) {
         
     } else {
         path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(50, 50)
@@ -192,19 +172,13 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if (self.isLoading)
-        //already loading, don't do anything
         return;
     
-    //not dragging anymore
     self.isDragging = NO;
     
-    //if scroll area is bigger than some constant defined before, do the action
     if (scrollView.contentOffset.y <= -REFRESH_HEADER_HEIGHT) {
-        // Released above the header
         [self startLoading];
-    } /*else if (scrollView.contentOffset.y <= REFRESH_HEADER_HEIGHT) {
-       self.actionButton.backgroundColor = [UIColor clearColor];
-       }*/
+    }
 }
 
 -(void)startLoading{
@@ -222,6 +196,8 @@
 }
 
 -(void)downloadImage{
+    
+    
     NSURL *url = [NSURL URLWithString:@"http://m.abril.com/face.jpeg"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
@@ -253,7 +229,7 @@
                 UIGraphicsEndImageContext();
                 
                 self.pinkCircle.backgroundColor = [UIColor colorWithPatternImage:image];
-                [self performSelector:@selector(stopLoading) withObject:nil afterDelay:1.5];
+                [self performSelector:@selector(stopLoading) withObject:nil afterDelay:4.5];
             });
         }
     }] resume];
@@ -292,17 +268,19 @@
     
     self.shouldAnimate = NO;
     [UIView animateWithDuration:1 animations:^{
-        //self.myScrolView.contentInset = UIEdgeInsetsMake(REFRESH_HEADER_HEIGHT, 0, 0, 0);
         self.myScrolView.contentInset = UIEdgeInsetsZero;
     } completion:^(BOOL finished){
         self.shouldAnimate = YES;
-        //self.pinkCircle.backgroundColor = [UIColor clearColor];
         self.underCircle.backgroundColor = [UIColor clearColor];
-        //self.myScrolView.contentInset = UIEdgeInsetsZero;
     }];
     
     
 }
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary     *)change context:(void *)context {
+    
+}
+
 
 
 @end
