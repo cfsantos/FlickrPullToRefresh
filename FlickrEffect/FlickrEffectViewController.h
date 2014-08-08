@@ -20,9 +20,12 @@
 #define CIRCLECENTERY 100
 
 
+
 @property(nonatomic, weak)IBOutlet UIScrollView *myScrolView;
 @property(nonatomic, strong)UIImageView *myImageView;
 @property(nonatomic, strong)UIImageView *faceImageView;
+@property(nonatomic, strong)UIImage *downloadedImage;
+
 
 @property(nonatomic, strong)UIView *underCircle;
 @property(nonatomic, strong)UIView *pinkCircle;
@@ -31,6 +34,7 @@
 @property(nonatomic)BOOL isLoading;
 @property(nonatomic)BOOL isAnimating;
 @property(nonatomic)BOOL shouldAnimate;
+@property(nonatomic)BOOL isDownloadFinished;
 
 
 

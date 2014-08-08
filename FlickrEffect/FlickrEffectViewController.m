@@ -48,6 +48,8 @@
     
     [self.myImageView addSubview:self.underCircle];
     [self.myImageView addSubview:self.pinkCircle];
+    
+    [self startLoading];
 }
 
 - (void)didReceiveMemoryWarning
@@ -86,6 +88,11 @@
     [self.underCircle addSubview:self.faceImageView];
     self.isAnimating = TRUE;
     
+    if (self.downloadedImage) {
+        self.underCircle.backgroundColor = [UIColor colorWithPatternImage:self.downloadedImage];
+    }
+    
+    //[self.pinkCircle.backgroundColor isEqual:[UIColor clearColor]] ? [UIColor purpleColor] : nil;
     self.pinkCircle.backgroundColor = [UIColor purpleColor];
 
     
@@ -104,33 +111,104 @@
         self.pinkCircle.transform = transform;
         self.underCircle.transform = transform;
     }completion:^(BOOL finished){
-        self.underCircle.layer.zPosition = 0;
-        self.pinkCircle.layer.zPosition = 0;
-        [UIView animateWithDuration:0.5f  delay:0 options:( UIViewAnimationOptionRepeat |UIViewAnimationOptionAutoreverse ) animations:^{
-            
-            self.pinkCircle.layer.zPosition = 1;
-            self.pinkCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
-            
-            self.pinkCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
-            self.pinkCircle.layer.zPosition = -1;
-            
-            NSLog(@"pinkCircle.position: %@", NSStringFromCGPoint([self.pinkCircle.layer.presentationLayer position]));
-        
-            self.underCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
-            self.underCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
-            
-            
-            
-        } completion:^(BOOL finished){
-            self.isAnimating = FALSE;
-            self.underCircle.layer.zPosition = -999;
-        }];
+        [self movePinkCircleRight];
     }];
     
     
     
-    
 }
+
+-(void)movePinkCircleLeft{
+    
+    [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.pinkCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+        self.underCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+        
+    } completion:^(BOOL finished){
+        self.pinkCircle.backgroundColor = (!self.isDownloadFinished ?
+                                           [UIColor purpleColor] :
+                                           [UIColor colorWithPatternImage:self.downloadedImage]);
+        [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.pinkCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
+            self.underCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
+            
+        } completion:^(BOOL finished){
+            self.underCircle.layer.zPosition = -1;
+            self.pinkCircle.layer.zPosition = 0;
+            
+            if (self.isDownloadFinished) {
+                [self.underCircle.layer removeAllAnimations];
+                [self.pinkCircle.layer removeAllAnimations];
+                
+                self.isLoading = NO;
+                self.isAnimating = NO;
+
+                
+                [UIView animateWithDuration:1.0f animations:^{
+                    CGAffineTransform pinkTransform = self.pinkCircle.transform;
+                    CGAffineTransform underTransform = self.underCircle.transform;
+                    
+                    self.pinkCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+                    self.underCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+                    
+                    pinkTransform = CGAffineTransformScale(pinkTransform, MAJORSCALE , MAJORSCALE);
+                    self.pinkCircle.transform = pinkTransform;
+                    
+                    underTransform = CGAffineTransformScale(underTransform, MAJORSCALE , MAJORSCALE);
+                    self.underCircle.transform = underTransform;
+                    
+                    self.shouldAnimate = NO;
+                    [UIView animateWithDuration:1 animations:^{
+                        self.myScrolView.contentInset = UIEdgeInsetsZero;
+                    } completion:^(BOOL finished){
+                        self.shouldAnimate = YES;
+                        //self.underCircle.backgroundColor = [UIColor colorWithPatternImage:self.downloadedImage];
+                        self.underCircle.backgroundColor = [UIColor clearColor];
+                    }];
+                    
+                } ];
+                
+                
+            } else {
+                [self movePinkCircleRight];
+            }
+            
+            
+        }];
+        
+    }];
+}
+
+-(void)movePinkCircleRight{
+    
+    [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.underCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+        self.pinkCircle.layer.position = CGPointMake(CIRCLECENTERX, CIRCLECENTERY);
+    } completion:^(BOOL finished){
+        
+        [UIView animateWithDuration:0.5f delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.underCircle.layer.position = CGPointMake(LEFTLIMIT, CIRCLECENTERY);
+            self.pinkCircle.layer.position = CGPointMake(RIGHTLIMIT, CIRCLECENTERY);
+        } completion:^(BOOL finished){
+            self.underCircle.layer.zPosition = 0;
+            self.pinkCircle.layer.zPosition = -1;
+            
+            [self movePinkCircleLeft];
+            //(!self.isDownloadFinished ? [self waitingRequestToFinish] : [self lastAnimation]);
+        } ];
+    }];
+}
+
+-(void)lastAnimation{
+    [self movePinkCircleLeft];
+}
+
+
+-(void)waitingRequestToFinish{
+    [self movePinkCircleLeft];
+    //[self movePinkCircleRight];
+}
+
 
 -(void)drawUnderCircleForOffset:(CGFloat)offset{
     self.underCircle.backgroundColor = [UIColor blueColor];
@@ -198,7 +276,9 @@
     
     NSURL *url = [NSURL URLWithString:@"http://www.uni-regensburg.de/Fakultaeten/phil_Fak_II/Psychologie/Psy_II/beautycheck/english/durchschnittsgesichter/m(01-32)_gr.jpg"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    self.isDownloadFinished = NO;
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        self.isDownloadFinished = YES;
         if (!error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -226,8 +306,10 @@
                 image = UIGraphicsGetImageFromCurrentImageContext();
                 UIGraphicsEndImageContext();
                 
-                self.pinkCircle.backgroundColor = [UIColor colorWithPatternImage:image];
-                [self performSelector:@selector(stopLoading) withObject:nil afterDelay:4.5];
+                self.downloadedImage = image;
+                
+                //self.pinkCircle.backgroundColor = [UIColor colorWithPatternImage:image];
+                //[self performSelector:@selector(stopLoading) withObject:nil afterDelay:4.5];
             });
         }
     }] resume];
